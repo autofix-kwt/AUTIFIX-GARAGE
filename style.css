@@ -10,25 +10,53 @@ body{
 .logoImg{width:96px}
 .name{font-weight:900;font-size:20px}
 .sub{color:#64748b;font-weight:700}
-button{font-weight:800}
+
 .services h2{margin:20px 0 10px}
 .servicesGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.servicesGrid button{padding:14px;border-radius:16px;border:1px solid #ddd;background:#fff}
+.servicesGrid button{
+  padding:14px;border-radius:16px;border:1px solid #ddd;
+  background:#fff;font-weight:800
+}
 .servicesGrid .wide{grid-column:1/3}
+
 .card{background:#fff;border-radius:20px;padding:16px;margin-top:20px}
 .hint{color:#64748b}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-input,select,textarea{padding:12px;border-radius:12px;border:1px solid #ccc}
+input,select,textarea{
+  padding:12px;border-radius:12px;border:1px solid #ccc
+}
 .slots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .slot{padding:10px;border-radius:12px;border:1px solid #ccc}
 .slot.on{background:#16a34a;color:#fff}
-#bookBtn{width:100%;padding:14px;border-radius:16px;border:none;background:#16a34a;color:#fff;font-size:16px}
-footer{margin:20px 0;text-align:center}
-footer a{margin:0 10px;font-weight:800;text-decoration:none}
+
+.waBtn{
+  margin-top:12px;width:100%;padding:14px;
+  border-radius:16px;border:none;
+  background:#25D366;color:#fff;
+  font-size:16px;font-weight:900;
+  display:flex;gap:10px;align-items:center;justify-content:center
+}
+.waIcon{width:22px;height:22px}
+
+.footer{
+  display:flex;flex-wrap:wrap;gap:12px;
+  justify-content:center;margin:20px 0
+}
+.socialBtn{
+  display:flex;gap:8px;align-items:center;
+  padding:10px 14px;border-radius:14px;
+  border:1px solid #ddd;background:#fff;
+  font-weight:800;text-decoration:none;color:inherit
+}
+.socialBtn svg{width:18px;height:18px}
+
+.tiktok svg{color:#000}
+
 .waFloat{
- position:fixed;right:20px;bottom:20px;width:56px;height:56px;
- background:#25D366;border-radius:50%;
- display:flex;align-items:center;justify-content:center;
- box-shadow:0 10px 30px rgba(0,0,0,.2)
+  position:fixed;right:20px;bottom:20px;
+  width:56px;height:56px;border-radius:50%;
+  background:#25D366;display:flex;
+  align-items:center;justify-content:center;
+  box-shadow:0 10px 30px rgba(0,0,0,.2)
 }
 .waFloat svg{width:28px;height:28px}
