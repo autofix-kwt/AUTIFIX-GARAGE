@@ -2,16 +2,11 @@
 // Rules: 08:30–20:00, 30-min slots, Friday closed, break 14:00–16:00
 
 const WA_NUMBER = "96566601793";
-const MAPS_URL = "https://maps.app.goo.gl/WVvV9BRBxZCMdZdY7";
-
 const OPEN_MIN = 8 * 60 + 30;   // 08:30
 const CLOSE_MIN = 20 * 60;      // 20:00
 const SLOT_MIN = 30;
-
-// Break 14:00–16:00
 const BREAKS = [{ start: 14 * 60, end: 16 * 60 }];
 
-// GCC list with flags + codes
 const GCC = [
   { key:"KW", name_en:"Kuwait",  name_ar:"الكويت",   flag:"🇰🇼", dial:"+965", example:"66601793" },
   { key:"SA", name_en:"Saudi",   name_ar:"السعودية", flag:"🇸🇦", dial:"+966", example:"5XXXXXXXX" },
@@ -33,8 +28,10 @@ const TEXT = {
     svcSub: "اضغط لاختيار الخدمة",
     bookTitle: "حجز موعد",
     hint: "مغلق الجمعة • استراحة ٢–٤ م • كل ٣٠ دقيقة • ٨:٣٠ص–٨:٠٠م",
-    lblName: "الاسم",
-    namePh: "اكتب اسمك",
+    lblFirst: "الاسم الأول",
+    lblLast: "الاسم الأخير",
+    firstPh: "مثال: محمد",
+    lastPh: "مثال: أحمد",
     lblPhone: "رقم الهاتف",
     phoneHelp: "اختر الدولة ثم اكتب الرقم بدون رمز الدولة.",
     lblService: "الخدمة",
@@ -48,7 +45,15 @@ const TEXT = {
     pickDate: "اختر تاريخًا لعرض الأوقات المتاحة.",
     closedFriday: "مغلق يوم الجمعة. اختر يومًا آخر.",
     noSlots: "لا توجد أوقات متاحة لهذا اليوم.",
-    missing: "يرجى تعبئة: الاسم، الهاتف، التاريخ، والوقت."
+    missing: "يرجى تعبئة: الاسم الأول، الاسم الأخير، الهاتف، التاريخ، والوقت.",
+    allPast: "انتهت مواعيد اليوم. اختر تاريخًا آخر.",
+    bio: [
+      "🔧 Auto Fix Garage",
+      "🚗 سيارتك بأيد أمينة",
+      "📍 فحص كمبيوتر | تصفية عامة | ميكانيك | تكييف",
+      "⚡️ جودة وسرعة بنفس المكان",
+      "🇰🇼 ادارة كويتية"
+    ]
   },
   en: {
     subTitle: "Online Booking",
@@ -56,8 +61,10 @@ const TEXT = {
     svcSub: "Tap to select a service",
     bookTitle: "Book an Appointment",
     hint: "Closed Friday • Break 2–4 PM • Every 30 minutes • 8:30 AM–8:00 PM",
-    lblName: "Name",
-    namePh: "Your name",
+    lblFirst: "First name",
+    lblLast: "Last name",
+    firstPh: "e.g. Mohammed",
+    lastPh: "e.g. Ahmed",
     lblPhone: "Phone",
     phoneHelp: "Choose country, then enter your number (without +code).",
     lblService: "Service",
@@ -71,16 +78,20 @@ const TEXT = {
     pickDate: "Pick a date to see available slots.",
     closedFriday: "Closed (Friday). Please choose another day.",
     noSlots: "No available slots for this day.",
-    missing: "Please fill: Name, Phone, Date, and Time."
+    missing: "Please fill: First name, Last name, Phone, Date, and Time.",
+    allPast: "All remaining times today are past. Please choose another date.",
+    bio: [
+      "🔧 Auto Fix Garage",
+      "🚗 Your car is in safe hands",
+      "📍 Diagnostics | General service | Mechanical | AC",
+      "⚡ Quality + speed in one place",
+      "🇰🇼 Kuwaiti management"
+    ]
   }
 };
 
-function saveLang(v){
-  try{ localStorage.setItem("autofix_lang", v); }catch(_){}
-}
-function loadLang(){
-  try{ return localStorage.getItem("autofix_lang") || ""; }catch(_){ return ""; }
-}
+function saveLang(v){ try{ localStorage.setItem("autofix_lang", v); }catch(_){ } }
+function loadLang(){ try{ return localStorage.getItem("autofix_lang") || ""; }catch(_){ return ""; } }
 
 function setLang(newLang){
   lang = newLang;
@@ -95,8 +106,10 @@ function setLang(newLang){
   $("bookTitle").textContent = t.bookTitle;
   $("hintText").textContent = t.hint;
 
-  $("lblName").textContent = t.lblName;
-  $("name").placeholder = t.namePh;
+  $("lblFirst").textContent = t.lblFirst;
+  $("lblLast").textContent = t.lblLast;
+  $("firstName").placeholder = t.firstPh;
+  $("lastName").placeholder = t.lastPh;
 
   $("lblPhone").textContent = t.lblPhone;
   $("phoneHelp").textContent = t.phoneHelp;
@@ -110,12 +123,18 @@ function setLang(newLang){
   $("bookBtnText").textContent = t.bookBtn;
   $("mapsText").textContent = t.maps;
 
-  // Update service card text based on lang
+  // Bio lines
+  $("bioTitle").textContent = t.bio[0];
+  $("bioLine1").textContent = t.bio[1];
+  $("bioLine2").textContent = t.bio[2];
+  $("bioLine3").textContent = t.bio[3];
+  $("bioLine4").textContent = t.bio[4];
+
+  // service cards
   document.querySelectorAll(".svc").forEach(btn=>{
     btn.textContent = (lang === "ar") ? btn.dataset.ar : btn.dataset.en;
   });
 
-  // Button label toggles
   $("langBtn").textContent = (lang === "ar") ? "EN" : "AR";
 
   renderCountryList();
@@ -123,7 +142,7 @@ function setLang(newLang){
   saveLang(lang);
 }
 
-/* 12-hour time format */
+/* time: 12-hour AM/PM */
 function minutesTo12h(mins){
   let h = Math.floor(mins / 60);
   const m = mins % 60;
@@ -133,14 +152,8 @@ function minutesTo12h(mins){
   return `${h}:${String(m).padStart(2,"0")} ${ampm}`;
 }
 
-function sanitizeDigits(s){
-  return (s || "").replace(/[^\d]/g, "");
-}
-
-function isOverlap(aStart, aEnd, bStart, bEnd){
-  return aStart < bEnd && bStart < aEnd;
-}
-
+function sanitizeDigits(s){ return (s || "").replace(/[^\d]/g, ""); }
+function isOverlap(aStart, aEnd, bStart, bEnd){ return aStart < bEnd && bStart < aEnd; }
 function isFriday(dateStr){
   if(!dateStr) return false;
   const d = new Date(dateStr + "T00:00:00");
@@ -206,12 +219,11 @@ function renderCountryList(){
   }
 }
 
-/* Services grid -> dropdown + selected style */
+/* Services grid */
 function wireServices(){
   const grid = $("servicesGrid");
   grid.querySelectorAll(".svc").forEach(btn=>{
     btn.addEventListener("click", ()=>{
-      // select
       grid.querySelectorAll(".svc").forEach(b=>b.classList.remove("selected"));
       btn.classList.add("selected");
       $("service").value = btn.dataset.svc;
@@ -226,7 +238,7 @@ function wireServices(){
   });
 }
 
-/* Render slots + morning/afternoon labels + next slot highlight */
+/* Slots: morning/afternoon labels + next slot highlight */
 function renderSlots(){
   const t = TEXT[lang];
   const dateStr = $("date").value;
@@ -235,15 +247,8 @@ function renderSlots(){
   slotsEl.innerHTML = "";
   msgEl.textContent = "";
 
-  if(!dateStr){
-    msgEl.textContent = t.pickDate;
-    return;
-  }
-
-  if(isFriday(dateStr)){
-    msgEl.textContent = t.closedFriday;
-    return;
-  }
+  if(!dateStr){ msgEl.textContent = t.pickDate; return; }
+  if(isFriday(dateStr)){ msgEl.textContent = t.closedFriday; return; }
 
   const selectedDate = new Date(dateStr + "T00:00:00");
   const now = new Date();
@@ -254,7 +259,6 @@ function renderSlots(){
 
   const nowMinutes = now.getHours()*60 + now.getMinutes();
 
-  // Build available slot list (skip breaks)
   const candidates = [];
   for(let m = OPEN_MIN; m < CLOSE_MIN; m += SLOT_MIN){
     const end = m + SLOT_MIN;
@@ -265,24 +269,18 @@ function renderSlots(){
     }
     if(blocked) continue;
 
-    // If today, mark past slots as disabled
     const past = isToday && (m < nowMinutes);
     candidates.push({ m, past });
   }
 
-  if(!candidates.length){
-    msgEl.textContent = t.noSlots;
-    return;
-  }
+  if(!candidates.length){ msgEl.textContent = t.noSlots; return; }
 
-  // Find next available slot index
   let nextIndex = 0;
   if(isToday){
     nextIndex = candidates.findIndex(s => !s.past);
     if(nextIndex < 0) nextIndex = -1;
   }
 
-  // Insert Morning label, then Afternoon label when time crosses 12:00
   let insertedMorning = false;
   let insertedAfternoon = false;
 
@@ -309,14 +307,8 @@ function renderSlots(){
     btn.textContent = minutesTo12h(s.m);
     btn.dataset.minutes = String(s.m);
 
-    if(s.past){
-      btn.disabled = true;
-    }
-
-    // highlight next slot
-    if(nextIndex === idx && !s.past){
-      btn.classList.add("next");
-    }
+    if(s.past) btn.disabled = true;
+    if(nextIndex === idx && !s.past) btn.classList.add("next");
 
     btn.addEventListener("click", ()=>{
       slotsEl.querySelectorAll(".slot").forEach(b=>b.classList.remove("on"));
@@ -326,52 +318,55 @@ function renderSlots(){
     slotsEl.appendChild(btn);
   });
 
-  // If all slots are past today
   if(isToday && nextIndex === -1){
-    msgEl.textContent = (lang === "ar")
-      ? "انتهت مواعيد اليوم. اختر تاريخًا آخر."
-      : "Today is fully booked/past. Please choose another date.";
+    msgEl.textContent = t.allPast;
   }
 }
 
 /* WhatsApp booking */
 function buildWhatsAppMessage(){
   const t = TEXT[lang];
-  const name = $("name").value.trim();
+  const first = $("firstName").value.trim();
+  const last  = $("lastName").value.trim();
   const phoneDigits = sanitizeDigits($("phone").value.trim());
   const service = $("service").value;
   const date = $("date").value;
   const slotBtn = document.querySelector(".slot.on");
 
-  if(!name || !phoneDigits || !date || !slotBtn){
+  if(!first || !last || !phoneDigits || !date || !slotBtn){
     return { ok:false, text:t.missing };
   }
 
+  const fullName = `${first} ${last}`;
   const customerPhone = `${selectedCountry.dial}${phoneDigits}`;
   const timeText = slotBtn.textContent;
-  const notes = $("notes").value.trim();
+  const notes = $("notes").value.trim() || "-";
 
   if(lang === "ar"){
-    const msg =
+    return {
+      ok:true,
+      text:
 `طلب حجز - AUTOFIX
-الاسم: ${name}
+الاسم: ${fullName}
 الهاتف: ${customerPhone}
 الخدمة: ${service}
 التاريخ: ${date}
 الوقت: ${timeText}
-ملاحظات: ${notes || "-"}`;
-    return { ok:true, text: msg };
-  } else {
-    const msg =
+ملاحظات: ${notes}`
+    };
+  }
+
+  return {
+    ok:true,
+    text:
 `AUTOFIX booking request
-Name: ${name}
+Name: ${fullName}
 Phone: ${customerPhone}
 Service: ${service}
 Date: ${date}
 Time: ${timeText}
-Notes: ${notes || "-"}`;
-    return { ok:true, text: msg };
-  }
+Notes: ${notes}`
+  };
 }
 
 function openWhatsApp(){
@@ -393,10 +388,7 @@ function init(){
   const dd = String(now.getDate()).padStart(2,"0");
   $("date").min = `${yyyy}-${mm}-${dd}`;
 
-  // Maps link
-  $("mapsLink")?.setAttribute("href", MAPS_URL);
-
-  // Country dropdown wiring
+  // country dropdown
   $("countryBtn").addEventListener("click", toggleCountryList);
   document.addEventListener("click", (e)=>{
     const list = $("countryList");
@@ -406,31 +398,27 @@ function init(){
     $("countryBtn").setAttribute("aria-expanded","false");
   });
 
-  // Buttons
+  // slots + book
   $("date").addEventListener("change", renderSlots);
   $("bookBtn").addEventListener("click", openWhatsApp);
 
-  // Language button
+  // language
   $("langBtn").addEventListener("click", ()=>{
     setLang(lang === "ar" ? "en" : "ar");
   });
 
-  // Services
+  // services
   wireServices();
 
-  // Load saved language or default to Arabic
+  // load lang
   const saved = loadLang();
-  if(saved === "en" || saved === "ar"){
-    setLang(saved);
-  } else {
-    setLang("ar");
-  }
+  if(saved === "en" || saved === "ar") setLang(saved);
+  else setLang("ar");
 
-  // default country: Kuwait
+  // default country Kuwait
   selectedCountry = GCC[0];
   renderCountryList();
 
-  // initial slots message
   renderSlots();
 }
 
