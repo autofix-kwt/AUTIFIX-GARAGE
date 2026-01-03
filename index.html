@@ -1,178 +1,82 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>AUTOFIX Garage | Booking</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AUTOFIX Garage</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-  <div class="wrap">
+<div class="wrap">
 
-    <!-- HEADER -->
-    <header class="top">
-      <div class="brand">
-        <img src="IMG_0160.png" class="logoImg" alt="AUTOFIX Garage">
-        <div class="titles">
-          <div class="name">AUTOFIX Garage</div>
-          <div class="sub" id="brandSub">Online Booking</div>
-        </div>
-      </div>
-
-      <button class="langBtn" id="langBtn">AR</button>
-    </header>
-
-    <!-- MAIN CARD -->
-    <main class="card">
-      <h1 id="h1">Book an Appointment</h1>
-      <p class="muted" id="hint">
-        Fridays are closed. Daily break: 2:00 PM – 4:00 PM. Slots every 30 minutes.
-      </p>
-
-      <section class="grid">
-
-        <label class="field">
-          <span id="lblName">Name</span>
-          <input id="name" placeholder="Your name" />
-        </label>
-
-        <div class="field">
-          <span id="lblPhone">Phone</span>
-          <div class="phoneRow">
-            <button class="countryBtn" id="countryBtn" type="button">
-              <span id="countryFlag">🇰🇼</span>
-              <span id="countryCode">+965</span>
-              <span class="chev">▾</span>
-            </button>
-            <input id="phone" placeholder="66601793" inputmode="numeric" />
-          </div>
-
-          <div class="countryList" id="countryList" hidden></div>
-          <div class="muted small" id="phoneHelp">
-            Choose country, then enter your number (without +code).
-          </div>
-        </div>
-
-        <label class="field">
-          <span id="lblService">Service</span>
-          <select id="service">
-            <option value="Diagnostics">Diagnostics</option>
-            <option value="Maintenance">Maintenance</option>
-            <option value="AC">AC</option>
-            <option value="Electrical">Electrical</option>
-            <option value="Brakes">Brakes</option>
-            <option value="Tires">Tires</option>
-            <option value="Other">Other</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span id="lblDate">Date</span>
-          <input id="date" type="date" />
-        </label>
-
-        <div class="field">
-          <span id="lblTime">Time Slot</span>
-          <div class="slots" id="slots"></div>
-          <div class="muted small" id="slotMsg"></div>
-        </div>
-
-        <label class="field">
-          <span id="lblCar">Car (optional)</span>
-          <input id="car" placeholder="e.g. GMC Yukon 2019" />
-        </label>
-
-        <label class="field full">
-          <span id="lblPlate">Plate (optional)</span>
-          <input id="plate" placeholder="Plate number" />
-        </label>
-
-        <label class="field full">
-          <span id="lblNotes">Notes (optional)</span>
-          <textarea id="notes" rows="3"
-            placeholder="Tell us the issue or what you want done"></textarea>
-        </label>
-
-      </section>
-
-      <div class="actions">
-        <button class="btn" id="previewBtn">Preview</button>
-        <button class="btn primary" id="waBtn">Book via WhatsApp</button>
-      </div>
-
-      <section class="summary" id="summary" hidden>
-        <h2 id="sumTitle">Booking Summary</h2>
-        <pre id="sumText"></pre>
-      </section>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="foot">
-      <div class="footLeft">
-
-        <a class="waLink" id="directWa" target="_blank">
-          WhatsApp: +965 66601793
-        </a>
-
-        <div class="social">
-
-          <!-- INSTAGRAM -->
-          <a class="socialBtn" id="igLink" target="_blank" aria-label="Instagram">
-            <span class="icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="18" height="18" rx="5"
-                  stroke="currentColor" stroke-width="1.6"/>
-                <circle cx="12" cy="12" r="4"
-                  stroke="currentColor" stroke-width="1.6"/>
-                <circle cx="17" cy="7" r="1.2" fill="currentColor"/>
-              </svg>
-            </span>
-            <span>Instagram</span>
-          </a>
-
-          <!-- TIKTOK MULTICOLOR -->
-          <a class="socialBtn" id="ttLink" target="_blank" aria-label="TikTok">
-            <span class="icon">
-              <svg viewBox="0 0 64 64">
-                <path fill="#25F4EE"
-                  d="M38 10v28c0 6.7-5.4 12.1-12.1 12.1S13.8 44.7 13.8 38s5.4-12.1 12.1-12.1c1 0 2 .1 3 .4v6.9c-1-.6-2-.9-3.4-.9-3.5 0-6.4 2.9-6.4 6.4s2.9 6.4 6.4 6.4 6.4-2.9 6.4-6.4V10h6z"/>
-                <path fill="#FE2C55"
-                  d="M40.5 11.5v27.6c0 6.7-5.4 12.1-12.1 12.1-2.5 0-4.8-.7-6.8-2 2.1 2.9 5.5 4.8 9.3 4.8 6.7 0 12.1-5.4 12.1-12.1V14.6c3.2 2.6 6.9 4 11 4.2v-3.4c-5.7-.8-10.2-5.1-11.3-10.6h-2.2z"/>
-                <path fill="currentColor"
-                  d="M38.9 10h3.8c1.1 5.5 5.6 9.8 11.3 10.6v3.4c-4.1-.2-7.8-1.6-11-4.2v27.3c0 6.7-5.4 12.1-12.1 12.1-3.8 0-7.2-1.9-9.3-4.8-1.2-1.7-1.9-3.8-1.9-6.1 0-5.9 4.8-10.7 10.7-10.7 1.4 0 2.7.3 3.9.8v-3.6c-1-.3-2-.4-3-.4-6.7 0-12.1 5.4-12.1 12.1 0 6.7 5.4 12.1 12.1 12.1s12.1-5.4 12.1-12.1V10z"/>
-              </svg>
-            </span>
-            <span>TikTok</span>
-          </a>
-
-          <!-- MAPS -->
-          <a class="socialBtn" id="mapsLink" target="_blank" aria-label="Directions">
-            <span class="icon">
-              <svg viewBox="0 0 24 24" fill="none">
-                <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"
-                  stroke="currentColor" stroke-width="1.6"/>
-                <circle cx="12" cy="9" r="3"
-                  stroke="currentColor" stroke-width="1.6"/>
-              </svg>
-            </span>
-            <span id="dirText">Directions</span>
-          </a>
-
-        </div>
-      </div>
-
-      <div class="muted small" id="footNote">
-        Add to Home Screen for app-like use.
-      </div>
-    </footer>
+<header class="top">
+  <div class="brand">
+    <img src="IMG_0160.png" class="logoImg" alt="AUTOFIX Garage">
+    <div>
+      <div class="name">AUTOFIX Garage</div>
+      <div class="sub">حجز مواعيد أونلاين</div>
+    </div>
   </div>
+  <button id="langBtn">EN</button>
+</header>
 
-  <!-- FLOATING WHATSAPP -->
-  <a class="waFloat" id="waFloat" target="_blank" aria-label="WhatsApp">
-    <span class="waBubble">WA</span>
-  </a>
+<section class="services">
+  <h2>اختر الخدمة</h2>
+  <div class="servicesGrid">
+    <button data-svc="Diagnostics">🔧 فحص</button>
+    <button data-svc="AC">❄️ تكييف</button>
+    <button data-svc="Electrical">⚡ كهرباء</button>
+    <button data-svc="Brakes">🛑 فرامل</button>
+    <button data-svc="Maintenance">🛢️ صيانة</button>
+    <button data-svc="Tires">🛞 إطارات</button>
+    <button data-svc="Other" class="wide">🧰 أخرى</button>
+  </div>
+</section>
 
-  <script src="app.js"></script>
+<main class="card">
+<h1>حجز موعد</h1>
+<p class="hint">مغلق الجمعة • استراحة ٢–٤ م • كل ٣٠ دقيقة</p>
+
+<div class="grid">
+  <input id="name" placeholder="الاسم">
+  <input id="phone" placeholder="رقم الهاتف">
+
+  <select id="service">
+    <option>Diagnostics</option>
+    <option>AC</option>
+    <option>Electrical</option>
+    <option>Brakes</option>
+    <option>Maintenance</option>
+    <option>Other</option>
+  </select>
+
+  <input type="date" id="date">
+</div>
+
+<div id="slots" class="slots"></div>
+
+<textarea id="notes" placeholder="ملاحظات (اختياري)"></textarea>
+
+<button id="bookBtn">احجز عبر واتساب</button>
+</main>
+
+<footer>
+  <a href="https://instagram.com/autofix.kwt" target="_blank">Instagram</a>
+  <a href="https://tiktok.com/@autofix.kwt" target="_blank">TikTok</a>
+  <a href="https://maps.app.goo.gl/WVvV9BRBxZCMdZdY7" target="_blank">📍 الموقع</a>
+</footer>
+
+</div>
+
+<!-- FLOATING WHATSAPP -->
+<a class="waFloat" href="https://wa.me/96566601793" target="_blank" aria-label="WhatsApp">
+<svg viewBox="0 0 32 32">
+<path fill="#25D366" d="M16 3C9.4 3 4 8.1 4 14.4c0 2.5.8 4.8 2.2 6.7L4 29l8.2-2.1c1.2.3 2.4.5 3.8.5 6.6 0 12-5.1 12-11.4C28 8.1 22.6 3 16 3z"/>
+<path fill="#fff" d="M22.4 18.7c-.3-.1-1.8-.9-2.1-1s-.5-.1-.7.1-.8 1-.9 1.2-.3.2-.6.1-1.2-.4-2.3-1.3c-.9-.8-1.5-1.7-1.7-2-.2-.3 0-.4.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5s-.7-1.7-1-2.3c-.3-.6-.6-.5-.8-.5h-.7c-.2 0-.5.1-.7.3s-1 1-1 2.4 1 2.8 1.1 3 .2.4.3.6c1.2 2 2.7 3.5 4.5 4.6 2.2 1.4 2.6 1.1 3.1 1.1.5 0 1.8-.7 2.1-1.4.3-.7.3-1.3.2-1.4-.1-.1-.3-.2-.6-.3z"/>
+</svg>
+</a>
+
+<script src="app.js"></script>
 </body>
 </html>
