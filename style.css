@@ -254,7 +254,34 @@ pre{
   justify-content:center;
   border:1px solid rgba(15,23,42,.12);
   background: rgba(15,23,42,.04);
-  font-size: 12px;
+}
+
+.socialBtn .icon svg{
+  width:16px;
+  height:16px;
+  color: rgba(15,23,42,.85);
+}
+
+/* Floating WhatsApp */
+.waFloat{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: rgba(22,163,74,.95);
+  box-shadow: 0 18px 40px rgba(2,6,23,.22);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  border: 1px solid rgba(15,23,42,.10);
+}
+.waBubble{
+  font-weight: 1000;
+  color: white;
+  font-size: 14px;
 }
 
 /* RTL support */
