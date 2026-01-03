@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AUTOFIX Garage | Booking</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">A</div>
+        <div class="titles">
+          <div class="name" id="brandName">AUTOFIX Garage</div>
+          <div class="sub" id="brandSub">Online Booking</div>
+        </div>
+      </div>
+
+      <button class="langBtn" id="langBtn">AR</button>
+    </header>
+
+    <main class="card">
+      <h1 id="h1">Book an Appointment</h1>
+      <p class="muted" id="hint">
+        Fridays are closed. Daily break: 2:00 PM – 4:00 PM. Slots are every 30 minutes.
+      </p>
+
+      <section class="grid">
+        <label class="field">
+          <span id="lblName">Name</span>
+          <input id="name" placeholder="Your name" autocomplete="name" />
+        </label>
+
+        <label class="field">
+          <span id="lblPhone">Phone</span>
+          <input id="phone" placeholder="e.g. 66601793" inputmode="numeric" />
+        </label>
+
+        <label class="field">
+          <span id="lblService">Service</span>
+          <select id="service">
+            <option value="Diagnostics">Diagnostics</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="AC">AC</option>
+            <option value="Electrical">Electrical</option>
+            <option value="Brakes">Brakes</option>
+            <option value="Tires">Tires</option>
+            <option value="Other">Other</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span id="lblDate">Date</span>
+          <input id="date" type="date" />
+        </label>
+
+        <div class="field">
+          <span id="lblTime">Time Slot</span>
+          <div class="slots" id="slots"></div>
+          <div class="muted small" id="slotMsg"></div>
+        </div>
+
+        <label class="field">
+          <span id="lblCar">Car (optional)</span>
+          <input id="car" placeholder="e.g. GMC Yukon 2019" />
+        </label>
+
+        <label class="field full">
+          <span id="lblPlate">Plate (optional)</span>
+          <input id="plate" placeholder="Plate number" />
+        </label>
+
+        <label class="field full">
+          <span id="lblNotes">Notes (optional)</span>
+          <textarea id="notes" rows="3" placeholder="Tell us the issue or what you want done"></textarea>
+        </label>
+      </section>
+
+      <div class="actions">
+        <button class="btn" id="previewBtn">Preview</button>
+        <button class="btn primary" id="waBtn">Book via WhatsApp</button>
+      </div>
+
+      <section class="summary" id="summary" hidden>
+        <h2 id="sumTitle">Booking Summary</h2>
+        <pre id="sumText"></pre>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <a class="waLink" id="directWa" target="_blank" rel="noopener">WhatsApp: +965 66601793</a>
+      <div class="muted small" id="footNote">Add to Home Screen for app-like use.</div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
