@@ -32,13 +32,13 @@ body{
 .brand{display:flex;gap:10px;align-items:center}
 
 .logoImg{
-  width:44px;
-  height:44px;
+  width:78px;
+  height:78px;
   object-fit: contain;
-  border-radius: 12px;
-  border: 1px solid rgba(15,23,42,.10);
-  background: rgba(255,255,255,.9);
-  padding: 6px;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
 }
 
 .titles .name{font-weight:900;font-size:20px}
@@ -259,6 +259,12 @@ pre{
 .socialBtn .icon svg{
   width:18px;
   height:18px;
+  display:block;
+}
+
+/* Keep Instagram + pin icons using currentColor */
+#igLink .icon svg,
+#mapsLink .icon svg{
   color: rgba(15,23,42,.85);
 }
 
