@@ -11,7 +11,7 @@
   <div class="wrap">
     <header class="top">
       <div class="brand">
-        <div class="logo">A</div>
+        <img src="logo.png" class="logoImg" alt="AUTOFIX Garage">
         <div class="titles">
           <div class="name" id="brandName">AUTOFIX Garage</div>
           <div class="sub" id="brandSub">Online Booking</div>
@@ -33,10 +33,21 @@
           <input id="name" placeholder="Your name" autocomplete="name" />
         </label>
 
-        <label class="field">
+        <div class="field">
           <span id="lblPhone">Phone</span>
-          <input id="phone" placeholder="e.g. 66601793" inputmode="numeric" />
-        </label>
+          <div class="phoneRow">
+            <button class="countryBtn" type="button" id="countryBtn" aria-haspopup="listbox" aria-expanded="false">
+              <span id="countryFlag">🇰🇼</span>
+              <span id="countryCode">+965</span>
+              <span class="chev">▾</span>
+            </button>
+
+            <input id="phone" placeholder="66601793" inputmode="numeric" autocomplete="tel-national" />
+          </div>
+
+          <div class="countryList" id="countryList" role="listbox" aria-label="Country codes" hidden></div>
+          <div class="muted small" id="phoneHelp">Choose country, then enter your number (without +code).</div>
+        </div>
 
         <label class="field">
           <span id="lblService">Service</span>
@@ -90,11 +101,24 @@
     </main>
 
     <footer class="foot">
-      <a class="waLink" id="directWa" target="_blank" rel="noopener">WhatsApp: +965 66601793</a>
+      <div class="footLeft">
+        <a class="waLink" id="directWa" target="_blank" rel="noopener">WhatsApp: +965 66601793</a>
+
+        <div class="social">
+          <a class="socialBtn" id="igLink" target="_blank" rel="noopener" aria-label="Instagram">
+            <span class="icon">IG</span><span>Instagram</span>
+          </a>
+
+          <a class="socialBtn" id="ttLink" target="_blank" rel="noopener" aria-label="TikTok">
+            <span class="icon">TT</span><span>TikTok</span>
+          </a>
+        </div>
+      </div>
+
       <div class="muted small" id="footNote">Add to Home Screen for app-like use.</div>
     </footer>
   </div>
 
   <script src="app.js"></script>
 </body>
-</html>
+</html
