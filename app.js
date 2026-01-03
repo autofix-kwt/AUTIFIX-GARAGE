@@ -28,7 +28,6 @@ function renderSlots(){
     slotsEl.appendChild(b);
   }
 }
-
 dateEl.onchange=renderSlots;
 
 document.querySelectorAll(".servicesGrid button").forEach(b=>{
@@ -41,7 +40,10 @@ document.getElementById("bookBtn").onclick=()=>{
   const svc=serviceEl.value;
   const date=dateEl.value;
   const slot=document.querySelector(".slot.on")?.textContent;
-  if(!name||!phone||!date||!slot){alert("يرجى تعبئة جميع الحقول");return;}
+  if(!name||!phone||!date||!slot){
+    alert("يرجى تعبئة جميع الحقول");
+    return;
+  }
 
   const msg=encodeURIComponent(
 `طلب حجز - AUTOFIX
