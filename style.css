@@ -51,6 +51,18 @@ body{
   font-weight:950;
 }
 
+/* BIO */
+.bioCard{
+  margin-top:14px;
+  padding:14px 14px;
+  border-radius:18px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.10);
+  color:#fff;
+}
+.bioTitle{font-weight:950;font-size:18px;margin-bottom:6px}
+.bioLine{font-weight:800;color:rgba(255,255,255,.88);line-height:1.55}
+
 /* ON DARK HELPERS */
 .mutedOnDark{color:rgba(255,255,255,.70);font-weight:700}
 
@@ -138,7 +150,6 @@ textarea{resize:vertical}
   width:100%;
   border:0;
   background:transparent;
-  text-align:left;
   padding:12px;
   display:flex;
   justify-content:space-between;
@@ -179,9 +190,7 @@ textarea{resize:vertical}
   border-color: rgba(245,158,11,.55);
   box-shadow: 0 0 0 2px rgba(245,158,11,.18) inset;
 }
-.slot:disabled{
-  opacity:.35;
-}
+.slot:disabled{opacity:.35}
 
 /* BUTTON */
 .waBtn{
@@ -247,11 +256,11 @@ textarea{resize:vertical}
 .waFloatIcon{width:28px;height:28px}
 
 /* RTL/LTR switching */
-html[dir="rtl"] .countryItem{text-align:right}
 html[dir="rtl"] .countryLeft{flex-direction:row-reverse}
 html[dir="rtl"] .phoneRow{flex-direction:row-reverse}
 html[dir="rtl"] input,html[dir="rtl"] textarea{direction:rtl;text-align:right}
 html[dir="rtl"] select{direction:rtl}
+html[dir="ltr"] input,html[dir="ltr"] textarea{direction:ltr;text-align:left}
 
 @media (max-width: 680px){
   .grid{grid-template-columns:1fr}
