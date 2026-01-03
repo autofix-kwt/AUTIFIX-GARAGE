@@ -97,7 +97,6 @@ const T = {
       AC: "تكييف",
       Electrical: "كهرباء",
       Brakes: "فرامل",
-      Tires: "إطارات",
       Other: "أخرى"
     }
   }
