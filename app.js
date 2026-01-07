@@ -2,6 +2,7 @@
 // Rules: 08:30–20:00, 30-min slots, Friday closed, break 14:00–16:00
 
 const WA_NUMBER = "96566601793";
+const BOOKINGS_API_URL = "https://script.google.com/macros/s/AKfycbwU4U_IJmcvRyzx7Kyj0yxb4kV2tHyCf5wy7PdP5hXkOUG5_F05zGwlNxAen1p_RgM/exec";
 const OPEN_MIN = 8 * 60 + 30;   // 08:30
 const CLOSE_MIN = 20 * 60;      // 20:00
 const SLOT_MIN = 30;
@@ -20,6 +21,9 @@ let lang = "ar";
 let selectedCountry = GCC[0];
 
 const $ = (id) => document.getElementById(id);
+
+const bookedCache = new Map();
+const bookedFetches = new Map();
 
 const TEXT = {
   ar: {
@@ -160,6 +164,86 @@ function isFriday(dateStr){
   return d.getDay() === 5;
 }
 
+function parseTimeToMinutes(timeStr){
+  if(!timeStr) return null;
+  const match = String(timeStr).trim().match(/(\d{1,2}):(\d{2})(?:\s*([AP]M))?/i);
+  if(!match) return null;
+  let hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  const ampm = match[3] ? match[3].toUpperCase() : "";
+  if(ampm){
+    if(hours === 12) hours = 0;
+    if(ampm === "PM") hours += 12;
+  }
+  return hours * 60 + minutes;
+}
+
+function extractBookingDate(entry){
+  if(!entry) return "";
+  if(typeof entry === "object"){
+    const dateField = entry.date || entry.Date || entry.bookingDate || entry.day;
+    if(dateField) return String(dateField).slice(0, 10);
+  }
+  const text = String(entry);
+  const match = text.match(/(\d{4}-\d{2}-\d{2})/);
+  return match ? match[1] : "";
+}
+
+function extractBookingTime(entry){
+  if(!entry) return "";
+  if(typeof entry === "object"){
+    return entry.time || entry.Time || entry.slot || entry.hour || "";
+  }
+  const text = String(entry);
+  const match = text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM)?)/i);
+  return match ? match[1] : text;
+}
+
+async function loadBookedSlots(dateStr){
+  if(bookedCache.has(dateStr)) return bookedCache.get(dateStr);
+  if(bookedFetches.has(dateStr)) return bookedFetches.get(dateStr);
+
+  const promise = (async ()=>{
+    const url = new URL(BOOKINGS_API_URL);
+    url.searchParams.set("date", dateStr);
+    const res = await fetch(url.toString(), { cache: "no-store" });
+    const data = await res.json();
+    const entries = Array.isArray(data)
+      ? data
+      : (data && (data.bookings || data.data || data.rows)) || [];
+
+    const booked = new Set();
+    for(const entry of entries){
+      const entryDate = extractBookingDate(entry) || dateStr;
+      if(entryDate !== dateStr) continue;
+      const timeStr = extractBookingTime(entry);
+      const mins = parseTimeToMinutes(timeStr);
+      if(mins !== null) booked.add(mins);
+    }
+    return booked;
+  })();
+
+  bookedFetches.set(dateStr, promise);
+  try{
+    const booked = await promise;
+    bookedCache.set(dateStr, booked);
+    return booked;
+  }finally{
+    bookedFetches.delete(dateStr);
+  }
+}
+
+function ensureBookedSlots(dateStr){
+  if(!dateStr) return;
+  loadBookedSlots(dateStr)
+    .then(()=>{
+      if($("date").value === dateStr) renderSlots();
+    })
+    .catch(()=>{
+      if(!bookedCache.has(dateStr)) bookedCache.set(dateStr, new Set());
+    });
+}
+
 /* Country selector */
 function toggleCountryList(){
   const list = $("countryList");
@@ -250,6 +334,9 @@ function renderSlots(){
   if(!dateStr){ msgEl.textContent = t.pickDate; return; }
   if(isFriday(dateStr)){ msgEl.textContent = t.closedFriday; return; }
 
+  ensureBookedSlots(dateStr);
+  const bookedSet = bookedCache.get(dateStr) || new Set();
+
   const selectedDate = new Date(dateStr + "T00:00:00");
   const now = new Date();
   const isToday =
@@ -268,6 +355,8 @@ function renderSlots(){
       if(isOverlap(m, end, br.start, br.end)){ blocked = true; break; }
     }
     if(blocked) continue;
+
+    if(bookedSet.has(m)) continue;
 
     const past = isToday && (m < nowMinutes);
     candidates.push({ m, past });
