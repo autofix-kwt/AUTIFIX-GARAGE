@@ -166,37 +166,60 @@ function isFriday(dateStr){
 
 function parseTimeToMinutes(timeStr){
   if(!timeStr) return null;
-  const match = String(timeStr).trim().match(/(\d{1,2}):(\d{2})(?:\s*([AP]M))?/i);
+  const raw = String(timeStr).trim();
+  const match = raw.match(/(\d{1,2}):(\d{2})/);
   if(!match) return null;
   let hours = Number(match[1]);
   const minutes = Number(match[2]);
-  const ampm = match[3] ? match[3].toUpperCase() : "";
+  const ampmMatch = raw.match(/\b([AP]M)\b/i);
+  const arMatch = raw.match(/[صم]/);
+  const ampm = ampmMatch ? ampmMatch[1].toUpperCase() : "";
   if(ampm){
     if(hours === 12) hours = 0;
     if(ampm === "PM") hours += 12;
+  }else if(arMatch){
+    const marker = arMatch[0];
+    if(hours === 12) hours = 0;
+    if(marker === "م") hours += 12;
   }
   return hours * 60 + minutes;
+}
+
+function normalizeDateString(value){
+  if(!value) return "";
+  const text = String(value).trim();
+  const isoMatch = text.match(/(\d{4}-\d{2}-\d{2})/);
+  if(isoMatch) return isoMatch[1];
+  const dmyMatch = text.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
+  if(dmyMatch){
+    const day = String(dmyMatch[1]).padStart(2, "0");
+    const month = String(dmyMatch[2]).padStart(2, "0");
+    let year = dmyMatch[3];
+    if(year.length === 2) year = `20${year}`;
+    return `${year}-${month}-${day}`;
+  }
+  return "";
 }
 
 function extractBookingDate(entry){
   if(!entry) return "";
   if(typeof entry === "object"){
     const dateField = entry.date || entry.Date || entry.bookingDate || entry.day;
-    if(dateField) return String(dateField).slice(0, 10);
+    const normalized = normalizeDateString(dateField);
+    if(normalized) return normalized;
   }
   const text = String(entry);
-  const match = text.match(/(\d{4}-\d{2}-\d{2})/);
-  return match ? match[1] : "";
+  return normalizeDateString(text);
 }
 
 function extractBookingTime(entry){
   if(!entry) return "";
   if(typeof entry === "object"){
-    return entry.time || entry.Time || entry.slot || entry.hour || "";
+    return entry.time || entry.Time || entry.slot || entry.hour || entry.bookingTime || "";
   }
   const text = String(entry);
-  const match = text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM)?)/i);
-  return match ? match[1] : text;
+  const match = text.match(/(\d{1,2}:\d{2}\s*(?:AM|PM)?|\d{1,2}:\d{2}\s*[صم])/i);
+  return match ? match[1] : "";
 }
 
 async function loadBookedSlots(dateStr){
@@ -207,10 +230,21 @@ async function loadBookedSlots(dateStr){
     const url = new URL(BOOKINGS_API_URL);
     url.searchParams.set("date", dateStr);
     const res = await fetch(url.toString(), { cache: "no-store" });
-    const data = await res.json();
+    if(!res.ok) throw new Error(`Bookings fetch failed: ${res.status}`);
+    let data;
+    try{
+      data = await res.json();
+    }catch(_){
+      const text = await res.text();
+      try{
+        data = JSON.parse(text);
+      }catch(err){
+        throw err;
+      }
+    }
     const entries = Array.isArray(data)
       ? data
-      : (data && (data.bookings || data.data || data.rows)) || [];
+      : (data && (data.bookings || data.data || data.rows || data.result)) || [];
 
     const booked = new Set();
     for(const entry of entries){
